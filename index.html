@@ -1,227 +1,122 @@
-<template>
-  <div class="dashboard">
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>“影”刃而解 - AI驱动三维重建与疾病诊疗系统</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2><i class="fa-solid fa-brain"></i> “影”刃而解</h2>
+                <p>沉浸式交互系统</p>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-step="1"><i class="fa-solid fa-file-import"></i> 数据处理 (CT/MRI)</a>
+                <a href="#" class="nav-item" data-step="2"><i class="fa-solid fa-cut"></i> AI病灶分割</a>
+                <a href="#" class="nav-item" data-step="3"><i class="fa-solid fa-cubes"></i> 三维重建</a>
+                <a href="#" class="nav-item" data-step="4"><i class="fa-solid fa-stethoscope"></i> 疾病分析与诊断</a>
+                <a href="#" class="nav-item" data-step="5"><i class="fa-solid fa-file-medical"></i> 报告输出</a>
+            </nav>
+            <div class="user-info">
+                <i class="fa-solid fa-user-doctor"></i> 专家模式
+            </div>
+        </aside>
 
-    <div class="header">
-      <div class="logo">
-        影刃而解 AI数字孪生平台
-      </div>
+        <main class="main-content">
+            <header class="topbar">
+                <div class="patient-info">
+                    <span>患者ID: P20260611</span>
+                    <span>姓名: 张**</span>
+                    <span>性别: 男</span>
+                    <span>部位: 颅脑/胸腹部</span>
+                </div>
+                <div class="tools">
+                    <button class="btn-tool"><i class="fa-solid fa-vr-cardboard"></i> 开启沉浸交互</button>
+                    <button class="btn-primary"><i class="fa-solid fa-play"></i> 运行诊断大模型</button>
+                </div>
+            </header>
 
-      <div class="menu">
-        <span>首页</span>
-        <span>影像中心</span>
-        <span>AI分析</span>
-        <span>三维重建</span>
-        <span>数字孪生</span>
-        <span>AR/VR</span>
-        <span>报告中心</span>
-      </div>
+            <div class="workspace">
+                <div class="panel slice-panel">
+                    <div class="panel-header">影像源区 (二维切片)</div>
+                    <div class="panel slice-panel">
+    <div class="panel-header">
+        影像源区 (二维切片)
+        <div class="upload-controls">
+            <input type="file" id="dicom-upload" accept=".dcm, .nii" style="display:none;">
+            <button class="btn-sm" onclick="document.getElementById('dicom-upload').click()">
+                <i class="fa-solid fa-folder-open"></i> 加载影像
+            </button>
+            <button class="btn-sm" id="btn-sync">
+                <i class="fa-solid fa-rotate"></i> 同步
+            </button>
+        </div>
     </div>
-
-    <div class="content">
-
-      <div class="left-panel">
-
-        <div class="card">
-          <h3>患者数据</h3>
-
-          <div class="number">
-            12,568
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>CT数据</h3>
-          <div class="number">
-            89,541
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>MRI数据</h3>
-          <div class="number">
-            45,285
-          </div>
-        </div>
-
-      </div>
-
-      <div class="center-panel">
-
-        <div id="threeContainer"></div>
-
-      </div>
-
-      <div class="right-panel">
-
-        <div class="card">
-          <h3>AI分析结果</h3>
-
-          <el-progress
-            :percentage="98"
-            color="#00ffff"
-          />
-        </div>
-
-        <div class="card">
-          <h3>重建成功率</h3>
-
-          <el-progress
-            :percentage="97"
-            color="#00ff99"
-          />
-        </div>
-
-      </div>
-
+    <div class="panel-content image-grid">
+        <div class="slice-view">轴状面 (Axial) <div class="slice-view">轴状面 (Axial) 
+    <div id="axial-view" class="image-box">
+        <span class="placeholder-text">等待导入...</span>
     </div>
+</div>
+        <div class="slice-view">冠状面 (Coronal) <div class="placeholder-img coronal"></div></div>
+        <div class="slice-view">矢状面 (Sagittal) <div class="placeholder-img sagittal"></div></div>
+    </div>
+</div>
+                    <div class="panel-content image-grid">
+                        <div class="slice-view">轴状面 (Axial) <div class="placeholder-img axial"></div></div>
+                        <div class="slice-view">冠状面 (Coronal) <div class="placeholder-img coronal"></div></div>
+                        <div class="slice-view">矢状面 (Sagittal) <div class="placeholder-img sagittal"></div></div>
+                    </div>
+                </div>
 
-  </div>
-</template>
+                <div class="panel three-d-panel">
+                    <div class="panel-header">三维重建交互区 <span class="badge">FPGA加速就绪</span></div>
+                    <div class="panel-content 3d-workspace">
+                        <div class="model-placeholder">
+                            <i class="fa-solid fa-skull model-icon"></i>
+                            <p>3D U-Net 模型渲染中...</p>
+                            <div class="scan-line"></div>
+                        </div>
+                        <div class="model-controls">
+                            <button><i class="fa-solid fa-rotate"></i> 360°旋转</button>
+                            <button><i class="fa-solid fa-magnifying-glass-plus"></i> 缩放</button>
+                            <button><i class="fa-solid fa-layer-group"></i> 骨骼/脏器分离</button>
+                        </div>
+                    </div>
+                </div>
 
-<script setup>
-import { onMounted } from "vue"
-import * as THREE from "three"
-
-onMounted(() => {
-
-  const scene = new THREE.Scene()
-
-  const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth/window.innerHeight,
-    0.1,
-    1000
-  )
-
-  const renderer = new THREE.WebGLRenderer()
-
-  renderer.setSize(900,600)
-
-  document
-    .getElementById("threeContainer")
-    .appendChild(renderer.domElement)
-
-  const geometry =
-    new THREE.TorusKnotGeometry()
-
-  const material =
-    new THREE.MeshStandardMaterial({
-      color:"#00ffff"
-    })
-
-  const mesh =
-    new THREE.Mesh(
-      geometry,
-      material
-    )
-
-  scene.add(mesh)
-
-  const light =
-    new THREE.PointLight(
-      0xffffff,
-      10
-    )
-
-  light.position.set(
-    10,
-    10,
-    10
-  )
-
-  scene.add(light)
-
-  camera.position.z=5
-
-  function animate(){
-
-    requestAnimationFrame(animate)
-
-    mesh.rotation.x +=0.01
-    mesh.rotation.y +=0.01
-
-    renderer.render(
-      scene,
-      camera
-    )
-  }
-
-  animate()
-})
-</script>
-
-<style scoped>
-
-body{
- background:#07111f;
-}
-
-.dashboard{
- width:100%;
- height:100vh;
- background:#07111f;
- color:white;
-}
-
-.header{
- height:70px;
- display:flex;
- justify-content:space-between;
- align-items:center;
- padding:0 40px;
- border-bottom:1px solid #0ff;
-}
-
-.logo{
- font-size:24px;
- font-weight:bold;
- color:#00ffff;
-}
-
-.menu span{
- margin-left:30px;
- cursor:pointer;
-}
-
-.content{
- display:flex;
- height:calc(100vh - 70px);
-}
-
-.left-panel{
- width:20%;
- padding:20px;
-}
-
-.center-panel{
- width:60%;
- display:flex;
- justify-content:center;
- align-items:center;
-}
-
-.right-panel{
- width:20%;
- padding:20px;
-}
-
-.card{
- background:#101c30;
- border:1px solid #00ffff;
- border-radius:10px;
- margin-bottom:20px;
- padding:20px;
-}
-
-.number{
- font-size:32px;
- color:#00ffff;
- margin-top:10px;
-}
-
-#threeContainer{
- width:900px;
- height:600px;
-}
-
-</style>
+                <div class="panel analysis-panel">
+                    <div class="panel-header">智能分析区</div>
+                    <div class="panel-content">
+                        <div class="data-card">
+                            <h3><i class="fa-solid fa-chart-pie"></i> 诊断结论</h3>
+                            <p class="highlight-text">胶质母细胞瘤 (恶性) - 5级</p>
+                            <div class="progress-bar-container">
+                                <span>恶性概率 98.2%</span>
+                                <div class="progress-bg"><div class="progress-fill" style="width: 98.2%; background: #ef4444;"></div></div>
+                            </div>
+                        </div>
+                        <div class="data-card">
+                            <h3><i class="fa-solid fa-ruler-combined"></i> 病灶定量参数</h3>
+                            <ul>
+                                <li>体积: 45.2 cm³</li>
+                                <li>最大径: 3.8 cm</li>
+                                <li>边界: 不规则，伴侵袭</li>
+                            </ul>
+                        </div>
+                        <div class="data-card">
+                            <h3><i class="fa-solid fa-notes-medical"></i> 临床决策建议</h3>
+                            <p class="small-text">建议尽早实施手术切除。虚拟解剖提示：肿瘤已侵犯右侧侧脑室，注意保护周边脑组织及血管。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
