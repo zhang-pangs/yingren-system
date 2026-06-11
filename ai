@@ -1,0 +1,210 @@
+index.html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>影刃而解 - 交互系统</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <nav class="navbar">
+    <div class="logo">影刃而解</div>
+    <div class="nav-buttons">
+      <button class="btn btn-upload">上传 DICOM</button>
+      <button class="btn btn-help">帮助</button>
+    </div>
+    <div class="user-info">用户名</div>
+  </nav>
+
+  <!-- 主容器：左中右布局 -->
+  <div class="container">
+    <!-- 左侧控制面板 -->
+    <aside class="sidebar-left">
+      <h3>数据与控制</h3>
+      <button id="btnUpload" class="btn btn-primary">上传影像</button>
+      <button id="btnReconstruct" class="btn btn-primary">开始重建</button>
+      <div class="control-group">
+        <label>透明度</label>
+        <input type="range" id="opacitySlider" class="slider" min="0" max="100" value="50">
+      </div>
+      <div class="control-group">
+        <label><input type="checkbox" id="repairMode"> 自动修复</label>
+      </div>
+    </aside>
+
+    <!-- 中间3D视图 -->
+    <main id="main-view">
+      <!-- 在此处渲染3D骨骼模型或占位图 -->
+      <div id="viewer-placeholder">3D模型视图区域</div>
+    </main>
+
+    <!-- 右侧分析面板 -->
+    <aside class="sidebar-right">
+      <h3>AI 分析结果</h3>
+      <ul id="result-list" class="result-list">
+        <!-- 分析结果条目（示例） -->
+        <li class="result-item">
+          <strong>疾病：</strong>椎管狭窄<br>
+          <strong>严重度：</strong>中等<br>
+          <strong>置信度：</strong>92%
+        </li>
+      </ul>
+      <button id="btnExport" class="btn btn-secondary">导出报告</button>
+      <button id="btnIntegrate" class="btn btn-secondary">集成平台</button>
+    </aside>
+  </div>
+
+  <!-- 底部状态栏 -->
+  <footer class="status-bar">
+    <span id="statusText">准备就绪</span>
+    <span id="progressBar" class="progress-bar"></span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+styles.css
+/* 全局样式 */
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #121212; /* 深色背景 */
+  color: #FFFFFF;
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1E1E1E;
+  padding: 10px 20px;
+}
+.navbar .logo { font-size: 20px; font-weight: bold; }
+.navbar .btn { margin-left: 10px; }
+
+/* 布局容器 */
+.container {
+  display: flex;
+  height: calc(100vh - 100px); /* 减去导航和状态栏高度 */
+}
+.sidebar-left, .sidebar-right {
+  width: 220px;
+  background-color: #1E1E1E;
+  padding: 15px;
+  box-sizing: border-box;
+}
+.sidebar-left h3, .sidebar-right h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+.main-view {
+  flex: 1;
+  background-color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#viewer-placeholder {
+  color: #888;
+}
+
+/* 按钮样式 */
+.btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn-primary {
+  background-color: #0099FF;
+  color: #FFF;
+}
+.btn-primary:hover { background-color: #0088DD; }
+.btn-secondary {
+  background-color: #333;
+  color: #FFF;
+  margin-top: 10px;
+}
+.btn-secondary:hover { background-color: #555; }
+
+/* 滑块样式 */
+.slider {
+  width: 100%;
+}
+.control-group {
+  margin-top: 10px;
+}
+
+/* 分析结果列表 */
+.result-list {
+  list-style: none;
+  padding: 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.result-item {
+  padding: 8px;
+  border-bottom: 1px solid #333;
+}
+
+/* 底部状态栏 */
+.status-bar {
+  height: 40px;
+  background-color: #1E1E1E;
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  box-sizing: border-box;
+  color: #AAA;
+}
+.progress-bar {
+  flex: 1;
+  height: 4px;
+  background-color: #333;
+  margin-left: 15px;
+  border-radius: 2px;
+}
+script.js
+// 示例脚本：添加交互逻辑和API调用示例
+document.getElementById('btnUpload').addEventListener('click', function() {
+  // TODO: 调用文件输入，上传到后端
+  alert('上传影像功能触发');
+});
+document.getElementById('btnReconstruct').addEventListener('click', function() {
+  document.getElementById('statusText').textContent = '开始三维重建...';
+  // 模拟调用后端API
+  simulateReconstruct();
+});
+
+// 模拟重建过程
+function simulateReconstruct() {
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += 10;
+    document.getElementById('progressBar').style.width = progress + '%';
+    if (progress >= 100) {
+      clearInterval(interval);
+      document.getElementById('statusText').textContent = '三维重建完成';
+      // 更新结果列表示例
+      addResultItem('椎管狭窄', '中等', 92);
+    }
+  }, 300);
+}
+
+// 添加分析结果条目到列表
+function addResultItem(disease, severity, confidence) {
+  const li = document.createElement('li');
+  li.className = 'result-item';
+  li.innerHTML = `<strong>疾病：</strong>${disease}<br>
+                  <strong>严重度：</strong>${severity}<br>
+                  <strong>置信度：</strong>${confidence}%`;
+  document.getElementById('result-list').appendChild(li);
+}
+
+document.getElementById('btnExport').addEventListener('click', function() {
+  alert('导出报告功能触发');
+});
+document.getElementById('btnIntegrate').addEventListener('click', function() {
+  alert('集成平台功能触发');
+});
