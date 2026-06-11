@@ -1,210 +1,300 @@
-index.html
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>影刃而解 - 交互系统</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>颅影随形 - 全身三维重建与智能诊疗平台</title>
+    <style>
+        :root {
+            --bg-dark: #0a1128;
+            --bg-panel: #162447;
+            --primary-cyan: #00e5ff;
+            --text-light: #f1faee;
+            --text-muted: #a8b2d1;
+            --border-color: #1f4068;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 顶部导航栏 */
+        header {
+            background-color: var(--bg-panel);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--primary-cyan);
+            box-shadow: 0 4px 15px rgba(0, 229, 255, 0.2);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links span {
+            margin-left: 20px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .nav-links span:hover, .nav-links span.active {
+            color: var(--primary-cyan);
+        }
+
+        /* 主体内容区 */
+        .main-container {
+            display: flex;
+            flex: 1;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        /* 左侧工作流菜单 */
+        .sidebar {
+            width: 250px;
+            background-color: var(--bg-panel);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .step-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .step-item:hover, .step-item.active {
+            background-color: rgba(0, 229, 255, 0.1);
+            border-left: 4px solid var(--primary-cyan);
+            transform: translateX(5px);
+        }
+
+        /* 中间核心操作区 */
+        .workspace {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .viewer-area {
+            flex: 1;
+            background-color: #000;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: radial-gradient(circle, #1f4068 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .mock-3d-model {
+            width: 300px;
+            height: 300px;
+            border: 2px dashed var(--primary-cyan);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--primary-cyan);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(0, 229, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
+        }
+
+        /* 右侧分析报告区 */
+        .analysis-panel {
+            width: 350px;
+            background-color: var(--bg-panel);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .data-card {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary-cyan);
+        }
+
+        .data-card h3 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: var(--text-muted);
+        }
+
+        .data-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        button.action-btn {
+            background-color: var(--primary-cyan);
+            color: var(--bg-dark);
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: auto;
+            transition: background 0.3s;
+        }
+
+        button.action-btn:hover {
+            background-color: #00b8cc;
+        }
+    </style>
 </head>
 <body>
-  <!-- 顶部导航栏 -->
-  <nav class="navbar">
-    <div class="logo">影刃而解</div>
-    <div class="nav-buttons">
-      <button class="btn btn-upload">上传 DICOM</button>
-      <button class="btn btn-help">帮助</button>
+
+    <header>
+        <div class="logo">
+            ☤ 颅影随形
+            <span style="font-size: 0.9rem; color: var(--text-muted); font-weight: normal; margin-left: 10px;">
+                AI驱动全身体三维重建与疾病诊疗交互系统
+            </span>
+        </div>
+        <div class="nav-links">
+            <span class="active">临床工作台</span>
+            <span>影像管理库</span>
+            <span>沉浸式教学(VR/AR)</span>
+            <span>系统设置</span>
+        </div>
+    </header>
+
+    <div class="main-container">
+        
+        <aside class="sidebar">
+            <h3 style="margin-bottom: 20px; color: var(--text-muted);">标准诊疗流程</h3>
+            <div class="step-item active" onclick="changeStep(1)">
+                1. 多模态影像导入 (CT/MRI)
+            </div>
+            <div class="step-item" onclick="changeStep(2)">
+                2. AI 全身病灶智能分割
+            </div>
+            <div class="step-item" onclick="changeStep(3)">
+                3. 全身体三维重建与重塑
+            </div>
+            <div class="step-item" onclick="changeStep(4)">
+                4. 疾病跨器官关联分析
+            </div>
+            <div class="step-item" onclick="changeStep(5)">
+                5. 沉浸式手术规划与导出
+            </div>
+        </aside>
+
+        <main class="workspace">
+            <div class="viewer-area">
+                <div class="mock-3d-model" id="model-display">
+                    等待导入多模态数据...
+                </div>
+                <div style="position: absolute; bottom: 20px; left: 20px; display: flex; gap: 10px;">
+                    <span style="background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 5px; color: var(--primary-cyan); font-size: 0.8rem;">3D U-Net + CBAM 运行中</span>
+                    <span style="background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 5px; color: var(--primary-cyan); font-size: 0.8rem;">FPGA 边缘加速开启</span>
+                </div>
+            </div>
+        </main>
+
+        <aside class="analysis-panel">
+            <h3 style="color: var(--primary-cyan); border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">智能分析报告</h3>
+            
+            <div class="data-card">
+                <h3>当前处理进度</h3>
+                <div class="data-value" id="progress-val">0%</div>
+            </div>
+
+            <div class="data-card">
+                <h3>全身病灶检测结果</h3>
+                <div style="color: #ff4757; font-size: 0.9rem; margin-top: 5px;">* 待AI分割确认区域</div>
+            </div>
+
+            <div class="data-card">
+                <h3>数字孪生匹配度</h3>
+                <div class="data-value" style="color: #2ed573;">--</div>
+            </div>
+
+            <button class="action-btn" onclick="simulateProcess()">一键启动 AI 诊疗闭环</button>
+        </aside>
+
     </div>
-    <div class="user-info">用户名</div>
-  </nav>
 
-  <!-- 主容器：左中右布局 -->
-  <div class="container">
-    <!-- 左侧控制面板 -->
-    <aside class="sidebar-left">
-      <h3>数据与控制</h3>
-      <button id="btnUpload" class="btn btn-primary">上传影像</button>
-      <button id="btnReconstruct" class="btn btn-primary">开始重建</button>
-      <div class="control-group">
-        <label>透明度</label>
-        <input type="range" id="opacitySlider" class="slider" min="0" max="100" value="50">
-      </div>
-      <div class="control-group">
-        <label><input type="checkbox" id="repairMode"> 自动修复</label>
-      </div>
-    </aside>
+    <script>
+        // 简单的交互逻辑模拟，用于答辩演示
+        function changeStep(step) {
+            const steps = document.querySelectorAll('.step-item');
+            steps.forEach(s => s.classList.remove('active'));
+            steps[step-1].classList.add('active');
 
-    <!-- 中间3D视图 -->
-    <main id="main-view">
-      <!-- 在此处渲染3D骨骼模型或占位图 -->
-      <div id="viewer-placeholder">3D模型视图区域</div>
-    </main>
+            const modelDisplay = document.getElementById('model-display');
+            
+            switch(step) {
+                case 1: modelDisplay.innerText = "读取 PACS/DICOM 数据..."; break;
+                case 2: modelDisplay.innerText = "正在进行像素级勾画..."; break;
+                case 3: modelDisplay.innerText = "全身体高精度重建中..."; break;
+                case 4: modelDisplay.innerText = "生成良恶性与转移风险评估..."; break;
+                case 5: modelDisplay.innerText = "进入沉浸式交互模式..."; break;
+            }
+        }
 
-    <!-- 右侧分析面板 -->
-    <aside class="sidebar-right">
-      <h3>AI 分析结果</h3>
-      <ul id="result-list" class="result-list">
-        <!-- 分析结果条目（示例） -->
-        <li class="result-item">
-          <strong>疾病：</strong>椎管狭窄<br>
-          <strong>严重度：</strong>中等<br>
-          <strong>置信度：</strong>92%
-        </li>
-      </ul>
-      <button id="btnExport" class="btn btn-secondary">导出报告</button>
-      <button id="btnIntegrate" class="btn btn-secondary">集成平台</button>
-    </aside>
-  </div>
-
-  <!-- 底部状态栏 -->
-  <footer class="status-bar">
-    <span id="statusText">准备就绪</span>
-    <span id="progressBar" class="progress-bar"></span>
-  </footer>
-
-  <script src="script.js"></script>
+        function simulateProcess() {
+            let progress = 0;
+            const progressEl = document.getElementById('progress-val');
+            const modelDisplay = document.getElementById('model-display');
+            
+            const interval = setInterval(() => {
+                progress += 5;
+                progressEl.innerText = progress + "%";
+                
+                if (progress === 20) changeStep(2);
+                if (progress === 50) changeStep(3);
+                if (progress === 80) changeStep(4);
+                
+                if(progress >= 100) {
+                    clearInterval(interval);
+                    progressEl.innerText = "100% (完成)";
+                    modelDisplay.innerHTML = "<strong>全身数字孪生体已生成</strong><br><br>点击可进行空间旋转与切面分析";
+                    document.querySelector('.data-card:nth-child(2) div').innerText = "共发现 2 处疑似关联病灶";
+                    document.querySelector('.data-card:nth-child(3) .data-value').innerText = "98.7%";
+                    changeStep(5);
+                }
+            }, 200);
+        }
+    </script>
 </body>
 </html>
-styles.css
-/* 全局样式 */
-body {
-  margin: 0;
-  font-family: 'Roboto', sans-serif;
-  background-color: #121212; /* 深色背景 */
-  color: #FFFFFF;
-}
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #1E1E1E;
-  padding: 10px 20px;
-}
-.navbar .logo { font-size: 20px; font-weight: bold; }
-.navbar .btn { margin-left: 10px; }
-
-/* 布局容器 */
-.container {
-  display: flex;
-  height: calc(100vh - 100px); /* 减去导航和状态栏高度 */
-}
-.sidebar-left, .sidebar-right {
-  width: 220px;
-  background-color: #1E1E1E;
-  padding: 15px;
-  box-sizing: border-box;
-}
-.sidebar-left h3, .sidebar-right h3 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  font-size: 16px;
-}
-.main-view {
-  flex: 1;
-  background-color: #111;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-#viewer-placeholder {
-  color: #888;
-}
-
-/* 按钮样式 */
-.btn {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.btn-primary {
-  background-color: #0099FF;
-  color: #FFF;
-}
-.btn-primary:hover { background-color: #0088DD; }
-.btn-secondary {
-  background-color: #333;
-  color: #FFF;
-  margin-top: 10px;
-}
-.btn-secondary:hover { background-color: #555; }
-
-/* 滑块样式 */
-.slider {
-  width: 100%;
-}
-.control-group {
-  margin-top: 10px;
-}
-
-/* 分析结果列表 */
-.result-list {
-  list-style: none;
-  padding: 0;
-  max-height: 300px;
-  overflow-y: auto;
-}
-.result-item {
-  padding: 8px;
-  border-bottom: 1px solid #333;
-}
-
-/* 底部状态栏 */
-.status-bar {
-  height: 40px;
-  background-color: #1E1E1E;
-  display: flex;
-  align-items: center;
-  padding: 0 15px;
-  box-sizing: border-box;
-  color: #AAA;
-}
-.progress-bar {
-  flex: 1;
-  height: 4px;
-  background-color: #333;
-  margin-left: 15px;
-  border-radius: 2px;
-}
-script.js
-// 示例脚本：添加交互逻辑和API调用示例
-document.getElementById('btnUpload').addEventListener('click', function() {
-  // TODO: 调用文件输入，上传到后端
-  alert('上传影像功能触发');
-});
-document.getElementById('btnReconstruct').addEventListener('click', function() {
-  document.getElementById('statusText').textContent = '开始三维重建...';
-  // 模拟调用后端API
-  simulateReconstruct();
-});
-
-// 模拟重建过程
-function simulateReconstruct() {
-  let progress = 0;
-  const interval = setInterval(() => {
-    progress += 10;
-    document.getElementById('progressBar').style.width = progress + '%';
-    if (progress >= 100) {
-      clearInterval(interval);
-      document.getElementById('statusText').textContent = '三维重建完成';
-      // 更新结果列表示例
-      addResultItem('椎管狭窄', '中等', 92);
-    }
-  }, 300);
-}
-
-// 添加分析结果条目到列表
-function addResultItem(disease, severity, confidence) {
-  const li = document.createElement('li');
-  li.className = 'result-item';
-  li.innerHTML = `<strong>疾病：</strong>${disease}<br>
-                  <strong>严重度：</strong>${severity}<br>
-                  <strong>置信度：</strong>${confidence}%`;
-  document.getElementById('result-list').appendChild(li);
-}
-
-document.getElementById('btnExport').addEventListener('click', function() {
-  alert('导出报告功能触发');
-});
-document.getElementById('btnIntegrate').addEventListener('click', function() {
-  alert('集成平台功能触发');
-});
